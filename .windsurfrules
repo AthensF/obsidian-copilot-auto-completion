@@ -1,0 +1,7 @@
+I am in the middle of building a Chrome Extension app that provide sentence completion for Monaco editor in Google Colab, for veterinary scribes
+
+I am stuck in that project because it is properly (FITB) filling in the blank, like I want it to.  I need to learn from an existing project that has the desired FITB capabilities.
+
+This is where this project comes in.  This is an example project that FITB, that caters to many use cases (eg. code completion), many that is irrelevant to what I want to learn.  The main use case I want to learn from is on sentence completion.  Also, this is an Obsidian extension, so some of it may not be relevant, given that we are building a chrome extension.
+
+This is a learning exercise, so don’t worry about suggesting ways that I could improve the code.
