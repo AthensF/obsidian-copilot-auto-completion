@@ -156,7 +156,6 @@ class ChatGPTWithReasoning implements PredictionService {
         }
 
         result = this.checkAgainstGuardRails(result);
-
         return result;
     }
 

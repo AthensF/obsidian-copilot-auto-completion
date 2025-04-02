@@ -61,9 +61,10 @@ class PredictingState extends State {
                 this.prefix,
                 this.suffix
             );
-
+        
+        // console.log("isStillNeeded:", this.isStillNeeded);
         if (!this.isStillNeeded) {
-            return;
+            // return;
         }
 
         if (result.isErr()) {
@@ -80,6 +81,8 @@ class PredictingState extends State {
             this.context.transitionToIdleState();
             return;
         }
+        // adding this one
+        console.log("Prediction at predicting_state: ", prediction);
         this.context.transitionToSuggestingState(prediction, this.prefix, this.suffix);
     }
 
