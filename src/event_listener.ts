@@ -13,6 +13,7 @@ import QueuedState from "./states/queued_state";
 import PredictingState from "./states/predicting_state";
 import {PredictionService} from "./prediction_services/types";
 import ChatGPTWithReasoning from "./prediction_services/chat_gpt_with_reasoning";
+import HardcodedCompletions from "./prediction_services/hardcoded_completions";
 import {checkForErrors} from "./settings/utils";
 import Context from "./context_detection";
 import {Settings} from "./settings/versions";
@@ -21,7 +22,7 @@ import {isMatchBetweenPathAndPatterns} from "./utils";
 import {LRUCache} from "lru-cache";
 import DisabledInvalidSettingsState from "./states/disabled_invalid_settings_state";
 import { App, TFile } from "obsidian";
-
+import { Result } from "neverthrow";
 
 const FIVE_MINUTES_IN_MS = 1000 * 60 * 5;
 const MAX_N_ITEMS_IN_CACHE = 5000;
@@ -296,7 +297,30 @@ class EventListener implements EventHandler, SettingsObserver {
 }
 
 function createPredictionService(settings: Settings) {
-    return ChatGPTWithReasoning.fromSettings(settings);
+    console.log("🔍 Creating prediction service chain...");
+    const hardcodedService = HardcodedCompletions.create();
+    console.log("✅ Hardcoded service created");
+    const chatGptService = ChatGPTWithReasoning.fromSettings(settings);
+    console.log("✅ ChatGPT service created");
+    
+    // Return a new prediction service that chains them together
+    return {
+        async fetchPredictions(prefix: string, suffix: string): Promise<Result<string, Error>> {
+            console.log("📝 Fetching predictions for:", prefix.slice(-20));
+            // First try the hardcoded completions
+            const hardcodedResult = await hardcodedService.fetchPredictions(prefix, suffix);
+            
+            // If we got a non-empty result from hardcoded service, return it
+            if (hardcodedResult.isOk() && hardcodedResult.value.length > 0) {
+                console.log("🎯 Using hardcoded completion");
+                return hardcodedResult;
+            }
+            
+            console.log("⏩ Falling back to ChatGPT");
+            // Otherwise, fall back to ChatGPT
+            return chatGptService.fetchPredictions(prefix, suffix);
+        }
+    };
 }
 
 export default EventListener;

@@ -1,7 +1,7 @@
-I am in the middle of building a Chrome Extension app that provide sentence completion for Monaco editor in Google Colab, for veterinary scribes
+I want to build a demo of a filling in the blank (‘FITB’) that helps veterinarians be quicker with typing their scribe notes.  This will be powered by a LLM that is finetuned in OpenAI.
 
-I am stuck in that project because it is properly (FITB) filling in the blank, like I want it to.  I need to learn from an existing project that has the desired FITB capabilities.
+This current project is a git clone of an existing open source project that caters to a generalised used case, including software code completion, mathematics, to do lists etc, which are not in the scope of my project.  You can safely ignore these use cases.
 
-This is where this project comes in.  This is an example project that FITB, that caters to many use cases (eg. code completion), many that is irrelevant to what I want to learn.  The main use case I want to learn from is on sentence completion.  Also, this is an Obsidian extension, so some of it may not be relevant, given that we are building a chrome extension.
+The current state of this project is very rudimentary.  The performance is slow, the tokens being returned are inaccurate.  A lot needs to be worked on before it is ready for prime time.
 
-This is a learning exercise, so don’t worry about suggesting ways that I could improve the code.
+However, I do want to push out a demo within the next day.  This will most likely be done through some creative hardcoding.  I will instruct you more in the specific instructions.  But this is the context for your
