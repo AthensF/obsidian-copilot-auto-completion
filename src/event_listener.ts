@@ -22,7 +22,7 @@ import {isMatchBetweenPathAndPatterns} from "./utils";
 import {LRUCache} from "lru-cache";
 import DisabledInvalidSettingsState from "./states/disabled_invalid_settings_state";
 import { App, TFile } from "obsidian";
-import { Result } from "neverthrow";
+import { err, ok, Result } from "neverthrow";
 
 const FIVE_MINUTES_IN_MS = 1000 * 60 * 5;
 const MAX_N_ITEMS_IN_CACHE = 5000;
@@ -300,7 +300,7 @@ function createPredictionService(settings: Settings) {
     console.log("🔍 Creating prediction service chain...");
     const hardcodedService = HardcodedCompletions.create();
     console.log("✅ Hardcoded service created");
-    const chatGptService = ChatGPTWithReasoning.fromSettings(settings);
+    // const chatGptService = ChatGPTWithReasoning.fromSettings(settings);
     console.log("✅ ChatGPT service created");
     
     // Return a new prediction service that chains them together
@@ -318,7 +318,9 @@ function createPredictionService(settings: Settings) {
             
             console.log("⏩ Falling back to ChatGPT");
             // Otherwise, fall back to ChatGPT
-            return chatGptService.fetchPredictions(prefix, suffix);
+            // return chatGptService.fetchPredictions(prefix, suffix);
+            // return err(new Error("ChatGPT service not implemented"));
+            return ok("");
         }
     };
 }
