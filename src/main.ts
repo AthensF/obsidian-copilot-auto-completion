@@ -13,7 +13,7 @@ import {InlineSuggestionState} from "./render_plugin/states";
 import CompletionKeyWatcher from "./render_plugin/completion_key_watcher";
 import {DEFAULT_SETTINGS, Settings} from "./settings/versions";
 import {deserializeSettings, serializeSettings} from "./settings/utils";
-
+import HardcodedCompletions from "./prediction_services/hardcoded_completions";
 
 export default class CopilotPlugin extends Plugin {
     async onload() {
@@ -143,6 +143,44 @@ export default class CopilotPlugin extends Plugin {
             },
         });
 
+        this.addCommand({
+            id: "hardcode-suggestions",
+            name: "Hardcode Suggestions",
+            editorCheckCallback: (
+                checking: boolean,
+                editor: Editor,
+                view: MarkdownView
+            ) => {
+                // @ts-expect-error, not typed
+                const editorView = editor.cm as EditorView;
+                const state = editorView.state;
+                if (checking) {
+                    return !hasMultipleCursors(state) && !hasSelection(state);
+                }
+
+                const prefix = getPrefix(state);
+                const suffix = getSuffix(state);
+
+                // Directly call fetchPredictions if it's a HardcodedCompletions service
+                if (eventListener.predictionService instanceof HardcodedCompletions) {
+                    const hardcodedService = eventListener.predictionService as HardcodedCompletions;
+                    hardcodedService.fetchPredictions(prefix, suffix)
+                        .then(result => {
+                            if (result.isOk()) {
+                                new Notice("Found prediction: " + result.value);
+                                eventListener.transitionToSuggestingState(result.value, prefix, suffix);
+                            } else {
+                                new Notice("No prediction found");
+                            }
+                        });
+                } else {
+                    new Notice("HardcodedCompletions service not active");
+                }
+                
+                return true;
+            },
+        });
+
     }
 
     private async saveSettings(settings: Settings): Promise<void> {
@@ -165,5 +203,3 @@ export default class CopilotPlugin extends Plugin {
     onunload() {
     }
 }
-
-

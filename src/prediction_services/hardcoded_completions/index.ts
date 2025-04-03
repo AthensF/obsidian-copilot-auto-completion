@@ -53,7 +53,7 @@ class HardcodedCompletions implements PredictionService {
                 const values = lines[i].split(',');
                 if (values.length >= 2) {
                     const entry = {
-                        userInput: values[0].trim(),
+                        userInput: values[0], //deliberately not trimmed
                         output: values[1].trim()
                     };
                     

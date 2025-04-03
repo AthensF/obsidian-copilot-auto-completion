@@ -301,12 +301,12 @@ function createPredictionService(settings: Settings) {
     const hardcodedService = HardcodedCompletions.create();
     console.log("✅ Hardcoded service created");
     // const chatGptService = ChatGPTWithReasoning.fromSettings(settings);
-    console.log("✅ ChatGPT service created");
+    // console.log("✅ ChatGPT service created");
     
     // Return a new prediction service that chains them together
     return {
         async fetchPredictions(prefix: string, suffix: string): Promise<Result<string, Error>> {
-            console.log("📝 Fetching predictions for:", prefix.slice(-20));
+            console.log("📝 Mapping hardcode predictions for:", prefix);
             // First try the hardcoded completions
             const hardcodedResult = await hardcodedService.fetchPredictions(prefix, suffix);
             
@@ -316,7 +316,7 @@ function createPredictionService(settings: Settings) {
                 return hardcodedResult;
             }
             
-            console.log("⏩ Falling back to ChatGPT");
+            // console.log("⏩ Falling back to ChatGPT");
             // Otherwise, fall back to ChatGPT
             // return chatGptService.fetchPredictions(prefix, suffix);
             // return err(new Error("ChatGPT service not implemented"));
